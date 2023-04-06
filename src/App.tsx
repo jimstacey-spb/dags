@@ -1,23 +1,24 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { ReactElement, useState } from 'react';
 import './App.css';
+import {useBreedList, useRandomDog } from './hooks/useDogFetch';
 
-function App() {
+const App = () => {
+  console.group('App');
+  const [breedList] = useBreedList();
+  const [currentBreed, setCurrentBreed] = useState('');
+  const currentDogPhotoSrc = useRandomDog(currentBreed || Object.keys(breedList)[0]);
+  console.groupEnd();
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <img src={currentDogPhotoSrc} className="App-logo" alt="logo" />
+        <select onChange={(e)=> {
+            console.log(e.currentTarget.value);
+            setCurrentBreed(e.currentTarget.value);
+            }}>
+          {Object.entries(breedList).map(([breed, subbreeds]) => {
+          return <option key={breed} value={breed}>{breed.charAt(0).toUpperCase() + breed.slice(1)}</option>})}
+        </select>
       </header>
     </div>
   );
